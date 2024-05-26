@@ -521,9 +521,9 @@ local function loadScratchpad()
                         break
                     end
                 end
-            end 
+            end
         end
-        
+
         removeCommandEvents(Input.getUiLayerCommandKeyboardKeys(inputActions.iCommandChat))
         removeCommandEvents(Input.getUiLayerCommandKeyboardKeys(inputActions.iCommandAllChat))
         removeCommandEvents(Input.getUiLayerCommandKeyboardKeys(inputActions.iCommandFriendlyChat))
@@ -617,9 +617,18 @@ local function loadScratchpad()
             return {DDM = {precision = 1}}
         elseif ac == "Hercules" then
             return {DDM = {precision = 3, lonDegreesWidth = 3}}
+        elseif string.sub(ac, 1, 9) == "Mirage-F1" then
+            return {DDM = {precision = 1, lonDegreesWidth = 3}, QFE = true}
         else
             return {DMS = true, DDM = true, MGRS = true}
         end
+    end
+
+    local function getQfe(alt)
+        local qnhMmHg = env.mission.weather.qnh
+        local qnhMbar = qnhMmHg * 1.333333
+        local qfe =  qnhMbar - (alt / 30)
+        return string.format('QFE: %2d', qfe)
     end
 
     local function insertCoordinates()
@@ -627,6 +636,7 @@ local function loadScratchpad()
         local alt = Terrain.GetSurfaceHeightWithSeabed(pos.x, pos.z)
         local lat, lon = Terrain.convertMetersToLatLon(pos.x, pos.z)
         local mgrs = Terrain.GetMGRScoordinates(pos.x, pos.z)
+        local qfe = getQfe(alt)
         local types = coordsType()
 
         local result = "\n\n"
@@ -638,6 +648,9 @@ local function loadScratchpad()
         end
         if types.MGRS then
             result = result .. mgrs .. "\n"
+        end
+        if types.QFE then
+            result = result .. qfe .. "\n"
         end
         result = result .. string.format("%.0f", alt) .. "m, ".. string.format("%.0f", alt*3.28084) .. "ft\n\n"
 
