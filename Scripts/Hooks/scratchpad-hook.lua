@@ -521,9 +521,9 @@ local function loadScratchpad()
                         break
                     end
                 end
-            end 
+            end
         end
-        
+
         removeCommandEvents(Input.getUiLayerCommandKeyboardKeys(inputActions.iCommandChat))
         removeCommandEvents(Input.getUiLayerCommandKeyboardKeys(inputActions.iCommandAllChat))
         removeCommandEvents(Input.getUiLayerCommandKeyboardKeys(inputActions.iCommandFriendlyChat))
@@ -606,6 +606,8 @@ local function loadScratchpad()
         elseif ac == "F-15ESE" then
             return {DDM = {precision = 3, lonDegreesWidth = 3}, MGRS = true}
         elseif ac == "M-2000C" then
+            return {DDM = {precision = 1, lonDegreesWidth = 3}}
+        elseif string.sub(ac, 1, 9) == "Mirage-F1" then
             return {DDM = {precision = 1, lonDegreesWidth = 3}}
         elseif ac == "F-16C_50" then
             return {DDM = {lonDegreesWidth = 3}, MGRS = true}
